@@ -1,3 +1,9 @@
+Table-Search-Example
+
+This is an example iOS application (modified from Apple's 'TableSearch' sample) that demontrates an issue when modally-presenting a UITableViewController that has a UISearchDisplayController, with the table view controller returning information in the selected table view cell back to the initiating view controller through a delegate method.  After a table view cell is selected, the application usually crashes with an EXC_BAD_ACCESS. Running the app with NSZombieEnabled indicates that the table view controller is being called by -[UISearchDisplayController _destroyManagedTableView] after it has been modally dismissed by the intiating view controller and its retain count has reached 0. This behavior seems to only happen when using a UISearchBar and UISearchDisplayController that are defined in a NIB using Interface Builder. Setting-up the search bar and display controller programmatically in the table view controller doesn't seem to cause the problem.
+
+Apple's original ReadMe:
+
 TableSearch
 
 This sample demonstrates how to use the UISearchDisplayController object in conjunction with a UISearchBar, effectively filtering in and out the contents of that table. If an iPhone/iPod Touch application has large amounts of table data, this sample shows how to filter it down to a manageable amount if memory usage is a concern or you just want users to scroll through less content in a table.
