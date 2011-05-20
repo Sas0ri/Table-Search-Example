@@ -23,6 +23,8 @@
 		7E3705AB11CAC39100F5DB11 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E3705A611CAC39100F5DB11 /* iTunesArtwork.png */; };
 		A506E0ED1386353D004B84DD /* PickProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A506E0EB1386353D004B84DD /* PickProductViewController.m */; };
 		A506E0EE1386353D004B84DD /* PickProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A506E0EC1386353D004B84DD /* PickProductViewController.xib */; };
+		A5AEF6D81386E09400330E24 /* MainViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = A5AEF6D61386E09400330E24 /* MainViewController2.m */; };
+		A5AEF6D91386E09400330E24 /* MainViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5AEF6D71386E09400330E24 /* MainViewController2.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +52,9 @@
 		A506E0EA1386353D004B84DD /* PickProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickProductViewController.h; sourceTree = "<group>"; };
 		A506E0EB1386353D004B84DD /* PickProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickProductViewController.m; sourceTree = "<group>"; };
 		A506E0EC1386353D004B84DD /* PickProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PickProductViewController.xib; sourceTree = "<group>"; };
+		A5AEF6D51386E09400330E24 /* MainViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController2.h; sourceTree = "<group>"; };
+		A5AEF6D61386E09400330E24 /* MainViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController2.m; sourceTree = "<group>"; };
+		A5AEF6D71386E09400330E24 /* MainViewController2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController2.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +108,9 @@
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				531F16A40D6367A3003D33FB /* AppDelegate.h */,
 				531F16990D6367A3003D33FB /* AppDelegate.m */,
+				A5AEF6D51386E09400330E24 /* MainViewController2.h */,
+				A5AEF6D61386E09400330E24 /* MainViewController2.m */,
+				A5AEF6D71386E09400330E24 /* MainViewController2.xib */,
 				533407730E06E7DD009822AC /* MainViewController.h */,
 				533407740E06E7DD009822AC /* MainViewController.m */,
 				5391030B0F8BDD5C00ED14FA /* Product.h */,
@@ -203,6 +211,7 @@
 				7E3705AA11CAC39100F5DB11 /* Icon@2x.png in Resources */,
 				7E3705AB11CAC39100F5DB11 /* iTunesArtwork.png in Resources */,
 				A506E0EE1386353D004B84DD /* PickProductViewController.xib in Resources */,
+				A5AEF6D91386E09400330E24 /* MainViewController2.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +227,7 @@
 				533407750E06E7DD009822AC /* MainViewController.m in Sources */,
 				5391030D0F8BDD5C00ED14FA /* Product.m in Sources */,
 				A506E0ED1386353D004B84DD /* PickProductViewController.m in Sources */,
+				A5AEF6D81386E09400330E24 /* MainViewController2.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

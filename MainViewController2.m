@@ -1,56 +1,17 @@
-/*
-     File: MainViewController.m 
- Abstract: Main table view controller for the application. 
-  Version: 1.5 
-  
- Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple 
- Inc. ("Apple") in consideration of your agreement to the following 
- terms, and your use, installation, modification or redistribution of 
- this Apple software constitutes acceptance of these terms.  If you do 
- not agree with these terms, please do not use, install, modify or 
- redistribute this Apple software. 
-  
- In consideration of your agreement to abide by the following terms, and 
- subject to these terms, Apple grants you a personal, non-exclusive 
- license, under Apple's copyrights in this original Apple software (the 
- "Apple Software"), to use, reproduce, modify and redistribute the Apple 
- Software, with or without modifications, in source and/or binary forms; 
- provided that if you redistribute the Apple Software in its entirety and 
- without modifications, you must retain this notice and the following 
- text and disclaimers in all such redistributions of the Apple Software. 
- Neither the name, trademarks, service marks or logos of Apple Inc. may 
- be used to endorse or promote products derived from the Apple Software 
- without specific prior written permission from Apple.  Except as 
- expressly stated in this notice, no other rights or licenses, express or 
- implied, are granted by Apple herein, including but not limited to any 
- patent rights that may be infringed by your derivative works or by other 
- works in which the Apple Software may be incorporated. 
-  
- The Apple Software is provided by Apple on an "AS IS" basis.  APPLE 
- MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION 
- THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS 
- FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND 
- OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS. 
-  
- IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL 
- OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION, 
- MODIFICATION AND/OR DISTRIBUTION OF THE APPLE SOFTWARE, HOWEVER CAUSED 
- AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE), 
- STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE 
- POSSIBILITY OF SUCH DAMAGE. 
-  
- Copyright (C) 2010 Apple Inc. All Rights Reserved. 
-  
- */
+//
+//  MainViewController2.m
+//  TableSearch
+//
+//  Created by jmatchett on 05/20/2011.
+//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//
 
-#import "MainViewController.h"
+#import "MainViewController2.h"
 #import "Product.h"
 
-@implementation MainViewController
+@implementation MainViewController2
 
-@synthesize listContent, filteredListContent, savedSearchTerm, savedScopeButtonIndex, searchWasActive, delegate;
+@synthesize listContent, filteredListContent, savedSearchTerm, savedScopeButtonIndex, searchWasActive, delegate, aSearchDisplayController;
 
 
 #pragma mark - 
@@ -59,6 +20,26 @@
 - (void)viewDidLoad
 {
 	self.title = @"Products";
+    
+    //programmaticaly create seach bar and display controller
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    searchBar.showsScopeBar = YES;
+    [searchBar sizeToFit];
+    searchBar.delegate = self;
+    searchBar.scopeButtonTitles = [NSArray arrayWithObjects: @"All", @"Device", @"Desktop", @"Portable", nil];
+    searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+    searchBar.selectedScopeButtonIndex = 0;
+    searchBar.placeholder = @"Search";
+    
+    UISearchDisplayController *searchDC = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController: self];
+    searchDC.delegate = self;
+    searchDC.searchResultsDataSource = self;
+    searchDC.searchResultsDelegate = self;
+    self.aSearchDisplayController = searchDC;
+    
+    [searchBar release];
+    [searchDC release];
 	
 	// create a filtered list that will contain products for the search results table.
 	self.filteredListContent = [NSMutableArray arrayWithCapacity:[self.listContent count]];
@@ -66,15 +47,16 @@
 	// restore search settings if they were saved in didReceiveMemoryWarning.
     if (self.savedSearchTerm)
 	{
-        [self.searchDisplayController setActive:self.searchWasActive];
-        [self.searchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
-        [self.searchDisplayController.searchBar setText:savedSearchTerm];
-        
+        [aSearchDisplayController setActive:self.searchWasActive];
+        [aSearchDisplayController.searchBar setSelectedScopeButtonIndex:self.savedScopeButtonIndex];
+        [aSearchDisplayController.searchBar setText:savedSearchTerm];
         self.savedSearchTerm = nil;
     }
 	
 	[self.tableView reloadData];
 	self.tableView.scrollEnabled = YES;
+    self.tableView.tableHeaderView = aSearchDisplayController.searchBar;
+    [aSearchDisplayController.searchBar becomeFirstResponder];
 }
 
 - (void)viewDidUnload
@@ -85,16 +67,16 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     // save the state of the search UI so that it can be restored if the view is re-created
-    self.searchWasActive = [self.searchDisplayController isActive];
-    self.savedSearchTerm = [self.searchDisplayController.searchBar text];
-    self.savedScopeButtonIndex = [self.searchDisplayController.searchBar selectedScopeButtonIndex];
+    self.searchWasActive = [aSearchDisplayController isActive];
+    self.savedSearchTerm = [aSearchDisplayController.searchBar text];
+    self.savedScopeButtonIndex = [aSearchDisplayController.searchBar selectedScopeButtonIndex];
 }
 
 - (void)dealloc
 {
-    NSLog(@"dealloc, refct: %d", [self retainCount]);
 	[listContent release];
 	[filteredListContent release];
+    [aSearchDisplayController release];
 	[super dealloc];
 }
 
@@ -108,7 +90,7 @@
 	 If the requesting table view is the search display controller's table view, return the count of
      the filtered list, otherwise return the count of the main list.
 	 */
-	if (tableView == self.searchDisplayController.searchResultsTableView)
+	if (tableView == aSearchDisplayController.searchResultsTableView)
 	{
         return [self.filteredListContent count];
     }
@@ -134,7 +116,7 @@
 	 If the requesting table view is the search display controller's table view, configure the cell using the filtered content, otherwise use the main list.
 	 */
 	Product *product = nil;
-	if (tableView == self.searchDisplayController.searchResultsTableView)
+	if (tableView == aSearchDisplayController.searchResultsTableView)
 	{
         product = [self.filteredListContent objectAtIndex:indexPath.row];
     }
@@ -154,7 +136,7 @@
 	 If the requesting table view is the search display controller's table view, configure the next view controller using the filtered content, otherwise use the main list.
 	 */
 	Product *product = nil;
-	if (tableView == self.searchDisplayController.searchResultsTableView)
+	if (tableView == aSearchDisplayController.searchResultsTableView)
 	{
         product = [self.filteredListContent objectAtIndex:indexPath.row];
     }
@@ -201,7 +183,7 @@
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
     [self filterContentForSearchText:searchString scope:
-			[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+     [[aSearchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[aSearchDisplayController.searchBar selectedScopeButtonIndex]]];
     
     // Return YES to cause the search result table view to be reloaded.
     return YES;
@@ -210,8 +192,8 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
 {
-    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
-			[[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    [self filterContentForSearchText:[aSearchDisplayController.searchBar text] scope:
+     [[aSearchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
     
     // Return YES to cause the search result table view to be reloaded.
     return YES;
@@ -225,10 +207,10 @@
 		[self.delegate productWasPicked:product];
 }
 
-//overide retain and release for debugging
+  //over-ride of retain and release for debugging
 //-(id)retain {
 //    NSLog(@"retain, refct: %d", [self retainCount]);
-//	return [super retain];
+//	return [super retain];    
 //}
 //
 //-(oneway void)release {
@@ -237,4 +219,3 @@
 //}
 
 @end
-

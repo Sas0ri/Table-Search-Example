@@ -11,7 +11,7 @@
 
 @implementation PickProductViewController
 
-@synthesize productPickerButton, pickedProductLabel;
+@synthesize productPickerButton, pickedProductLabel, controllerChoice;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -26,6 +26,7 @@
 {
     [productPickerButton release];
     [pickedProductLabel release];
+    [controllerChoice release];
     [super dealloc];
 }
 
@@ -61,7 +62,7 @@
 }
 
 -(IBAction)showProductPicker:(id)sender {
-	NSArray *listContent = [[NSArray alloc] initWithObjects:
+	NSArray *listContent = [NSArray arrayWithObjects:
 						 [Product productWithType:@"Device" name:@"iPhone"],
 						 [Product productWithType:@"Device" name:@"iPod"],
 						 [Product productWithType:@"Device" name:@"iPod touch"],
@@ -71,11 +72,25 @@
 						 [Product productWithType:@"Portable" name:@"MacBook"],
 						 [Product productWithType:@"Portable" name:@"MacBook Pro"],
 						 [Product productWithType:@"Portable" name:@"PowerBook"], nil];
-    MainViewController *mvc = [[MainViewController alloc] initWithNibName: @"MainView" bundle: nil];
-    mvc.listContent = listContent;
-    mvc.delegate = self;
-    [self presentModalViewController: mvc animated: YES];
-    [mvc release];
+
+    // use view controller with interface builder defined seach display controller
+    if (controllerChoice.selectedSegmentIndex == 0) {
+        MainViewController *mvc = [[MainViewController alloc] initWithNibName: @"MainView" bundle: nil];
+        mvc.listContent = listContent;
+        mvc.delegate = self;
+        NSLog(@"MainViewController desc: %@", [mvc description]);
+        [self presentModalViewController: mvc animated: YES];
+        [mvc release];
+    }
+    // use view controller with programmatically defined search display controller
+    else {
+        MainViewController2 *mvc = [[MainViewController2 alloc] initWithNibName: @"MainViewController2" bundle: nil];
+        mvc.listContent = listContent;
+        mvc.delegate = self;
+        NSLog(@"MainViewController2 desc: %@", [mvc description]);
+        [self presentModalViewController: mvc animated: YES];
+        [mvc release];
+    }
 }
 
 #pragma mark - ProductPickerDelegate method
